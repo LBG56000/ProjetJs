@@ -1,7 +1,6 @@
 class Country {
 
     /**
-     * 
      * @param {le code du pays} codeAlpha3 
      * @param {le nom français traduit du pays} frenchName 
      * @param {la capitale du pays} capitale 
@@ -227,19 +226,20 @@ function fill_countries() {
         let key = element["alpha3Code"]
 
         // Déclaration des variables pour stocker les différentes informations trouvées et test pour savoir si elles sont définies
-        let frenchName = element["translations"]["fr"] ? element["translations"]["fr"] : undefined
-        let capital = element["capital"] ? element["capital"] : undefined
-        let region = element["region"] ? element["region"] : undefined
-        let population = element["population"] ? element["population"] : undefined
-        let borders = element["borders"] ? element["borders"] : undefined
-        let area = element["area"] ? element["area"] : undefined
-        let languages = element["languages"] ? element["languages"] : undefined
-        let currencies = element["currencies"] ? element["currencies"] : undefined
-        let linkToImage = element["flags"]["svg"] ? element["flags"]["svg"] : undefined
-        let domainExtension = element["topLevelDomain"] ? element["topLevelDomain"] : undefined
+        let frenchName = element["translations"]["fr"] || undefined 
+        let capital = element["capital"] || undefined
+        let region = element["region"] || undefined
+        let population = element["population"] || undefined
+        let borders = element["borders"] || undefined
+        let area = element["area"] || undefined
+        let languages = element["languages"] || undefined
+        let currencies = element["currencies"] || undefined
+        let linkToImage = element["flags"]["svg"] || undefined
+        let domainExtension = element["topLevelDomain"] || undefined
 
         // Création du pays avec l'ensemble des valeurs nécessaires
-        let pays = new Country(key,
+        let country = new Country(
+            key,
             frenchName,
             capital,
             region,
@@ -253,7 +253,7 @@ function fill_countries() {
         )
 
         // Ajout du pays dans la variable de classe avec comme clé alpha3Code
-        Country.all_countries[key] = pays
+        Country.all_countries[key] = country
     })
 }
 

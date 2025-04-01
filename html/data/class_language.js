@@ -53,11 +53,12 @@ function fill_languages() {
                 // Récupération du code la langue
                 let languageCode = language["iso639_2"]
                 // Récupération du nom de la langue
-                let englishName = language["name"] ? language["name"] : undefined 
+                let englishName = language["name"] || undefined 
                 // Vérification si la langue n'éxiste pas déjà dans le tableau de la classe Language
                 if (!Object.keys(Language.all_languages).includes(languageCode)) {
                     // Création de l'objet Language
-                    let language = new Language(languageCode, 
+                    let language = new Language(
+                        languageCode, 
                         englishName
                     )
                     // Ajout dans le tableau de l'objet
