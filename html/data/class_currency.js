@@ -59,13 +59,14 @@ function fill_currencies(){
             // On parcourt le tableau de monnaies présent
             country.currencies.forEach(currency => {
                 // Récupération des données pour créer l'objet Currency
-                let code = currency["code"] ? currency["code"] : undefined
-                let name = currency["name"] ? currency["name"] : undefined
-                let symbol = currency["symbol"] ? currency["symbol"] : undefined
+                let code = currency["code"] || undefined
+                let name = currency["name"] || undefined
+                let symbol = currency["symbol"] || undefined
                 //On regarde si le code de la monnaie n'existe pas déjà dans le tableau
                 if (!Object.keys(Currency.all_currencies).includes(code)) {
                     // On crée l'object Currency avec les données précédemment initialisés
-                    let currency = new Currency (code, 
+                    let currency = new Currency (
+                        code, 
                         name, 
                         symbol
                     )
@@ -77,5 +78,5 @@ function fill_currencies(){
     })
 }
 
-// Appel de la fonction permettant d'initialiser les langues
+// Appel de la fonction permettant d'initialiser les monnaies
 fill_currencies()
