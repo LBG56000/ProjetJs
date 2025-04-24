@@ -84,15 +84,11 @@ function neighborless() {
     let neighborless = []
 
     // Parcourts du tableau contenant les pays
-    Object.keys(all_countries).forEach(countryKey => {
-        
-        // Initailisation d'un pays
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Initialisation des voisins de pays
-        const borders = country["borders"]
-        
-        if (borders === undefined) {
+        const borders = country.getBorders()
+        if (borders.length === 0) {
             neighborless.push(country)
         }
     })
@@ -115,12 +111,10 @@ function moreLanguages() {
     let maxLanguages = 0
 
     // Parcourt du tableau de pays
-    Object.keys(all_countries).forEach(countryKey => {
-        // Initialisation de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
         // Récupération des langues du pays
-        const languagesOfCountry = country["languages"]
-        if (languagesOfCountry !== undefined) {
+        const languagesOfCountry = country.getLanguages
+        if (languagesOfCountry.length !== 0) {
             // Récupération de la longueur du tableau
             const numberOfLanguages = languagesOfCountry.length
             if (numberOfLanguages >= maxLanguages) {
@@ -144,10 +138,7 @@ function moreLanguages() {
 function withCommonLanguage() {
     let withCommonLanguage = {}
 
-    Object.keys(all_countries).forEach(countryKey => {
-
-        // Récupération de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Récupération du code des langues parlées dans le pays
         const languagesOfCountry = country.getLanguages.map(
@@ -199,10 +190,7 @@ function withCommonLanguage() {
 function withoutCommonCurrency() {
     let withoutCommonCurrency = {}
     
-    Object.keys(all_countries).forEach(countryKey => {
-
-        // Récupération de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Récupération des monnaies du pays
         const currenciesOfCountry = country.getCurrencies
