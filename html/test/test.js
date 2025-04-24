@@ -17,35 +17,26 @@ function outsideTheContinent() {
     let bordersOutsideTheContinent = []
 
     // Récupération des clés du tableau contenant tous les pays permettant de sélectionner les éléments dans le tableau all_countries
-    Object.keys(all_countries).forEach(countryKey => {
-
-        // Récupération de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Récupération des pays voisins du pays
         const bordersOfCoutry = country.getBorders()
 
         //Si le tableau n'est pas défini on return
-        if (bordersOfCoutry === undefined) {
-            return undefined
-        }
-
-        // On parcourt le tableau des pays voisins
-        bordersOfCoutry.forEach(border => {
+        if (bordersOfCoutry) {
+            // On parcourt le tableau des pays voisins
+            bordersOfCoutry.forEach(border => {
 
             // On comparer chaque voisin et on le compare avec la region de l'object Country
             if (border["region"] !== country["region"]) {
-
                 // On ajoute le pays dans le tableau bordersOutsideTheContinent
-                bordersOutsideTheContinent.push(border)
+                bordersOutsideTheContinent.push(country)
             }
-        })
+            })
+        }
     })
     return bordersOutsideTheContinent
 }
-
-console.table(outsideTheContinent())
-
 
 /**
  * Q2 - moreNeighbors() :
@@ -62,14 +53,12 @@ function moreNeighbors() {
     // Variable changeante permettant de stocker le longueurs du tableau voisins
     let maxBorders = 0
 
+    console.log('test');
     // Parcourts du tableau contenant les pays
-    Object.keys(all_countries).forEach(countryKey => {
+    Object.values(all_countries).forEach(country => {
         
-        // Initailisation d'un pays
-        const country = all_countries[countryKey]
-
         // Initialisation des voisins de pays
-        const borders = country["borders"]
+        const borders = country.getBorders()
         
         if (borders !== undefined) {
             // Récupération de la longueur du tableau des voisins
@@ -85,14 +74,6 @@ function moreNeighbors() {
     return moreNeighbors
 }
 
-// Appel de la fonction Affichage du pays + des ses voisins
-console.log('Affichage des pays ayant le plus de voisin')
-moreNeighbors().forEach(country => {
-    console.log()
-    console.log(`Les voisins de ${country["frenchName"]} sont ${country.traductionOfBorders}`)
-})
-
-
 /**
  * Q3 - neighborless() : Tableau des pays n’ayant aucun voisin
  * Permet d'afficher les pays n'ayant aucuns voisins
@@ -103,24 +84,16 @@ function neighborless() {
     let neighborless = []
 
     // Parcourts du tableau contenant les pays
-    Object.keys(all_countries).forEach(countryKey => {
-        
-        // Initailisation d'un pays
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Initialisation des voisins de pays
-        const borders = country["borders"]
-        
-        if (borders === undefined) {
+        const borders = country.getBorders()
+        if (borders.length === 0) {
             neighborless.push(country)
         }
     })
     return neighborless
 }
-
-console.log('\nPays n\'ayant pas de voisins')
-console.table(neighborless(),'_frenchName')
-
 
 /**
  * Q4 - moreLanguages() : Tableau des pays parlant le plus de langues. 
@@ -138,12 +111,10 @@ function moreLanguages() {
     let maxLanguages = 0
 
     // Parcourt du tableau de pays
-    Object.keys(all_countries).forEach(countryKey => {
-        // Initialisation de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
         // Récupération des langues du pays
-        const languagesOfCountry = country["languages"]
-        if (languagesOfCountry !== undefined) {
+        const languagesOfCountry = country.getLanguages
+        if (languagesOfCountry.length !== 0) {
             // Récupération de la longueur du tableau
             const numberOfLanguages = languagesOfCountry.length
             if (numberOfLanguages >= maxLanguages) {
@@ -156,15 +127,6 @@ function moreLanguages() {
     return countryWithMoreLanguages
 }
 
-// Appel de la fonction et affichage du pays et des langues parlées
-console.log('Pays ou le plus de langues sont parlées')
-moreLanguages().forEach(country => {
-    console.log(country.toString())
-    console.log(country.getLanguages.toString())
-    console.log('\n')
-})
-
-
 /**
  * Q5 - withCommonLanguage() : Tableau des pays ayant au moins un voisin parlant l’une 
  * de ses langues. Affichez aussi les pays voisins (objets Country) et les langues en question (objets Language)
@@ -176,10 +138,7 @@ moreLanguages().forEach(country => {
 function withCommonLanguage() {
     let withCommonLanguage = {}
 
-    Object.keys(all_countries).forEach(countryKey => {
-
-        // Récupération de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Récupération du code des langues parlées dans le pays
         const languagesOfCountry = country.getLanguages.map(
@@ -220,25 +179,18 @@ function withCommonLanguage() {
     return withCommonLanguage
 }
 
-// Affichage du tableau avec un voisin parlant au moins une même langue commune avec le pays
-console.log('\nAffichage des pays avec un voisins parlant la même langue qu\'un pays')
-console.table(withCommonLanguage())
-
-
 /**
  * Q6 - withoutCommonCurrency() : Tableau des pays sans aucun voisin 
  * ayant au moins une de ses monnaies.
  * 
+ * Permet de récupérer les pays voisins n'ayant pas leur(s) monnaie(s)
  * @return un objet contenant les pays qui ont des voisins n'ayant pas au moins une seule de leur monnaie
  */
 
 function withoutCommonCurrency() {
     let withoutCommonCurrency = {}
     
-    Object.keys(all_countries).forEach(countryKey => {
-
-        // Récupération de l'objet Country
-        const country = all_countries[countryKey]
+    Object.values(all_countries).forEach(country => {
 
         // Récupération des monnaies du pays
         const currenciesOfCountry = country.getCurrencies
@@ -281,13 +233,11 @@ function withoutCommonCurrency() {
     return withoutCommonCurrency
 }
 
-console.log('\n Pays dont les voisins n\'ont pas au moins une monnaie en commun')
-console.table(withoutCommonCurrency())
-
 /**
  * Q7 - sortingDecreasingDensity() : Tableau des pays triés par ordre 
  * décroissant de densité de population.
  * 
+ * Permet de donner les pays triés pas ordre décroissant de densité de population
  * @return Un objet contenant le tableau trié
  */
 
@@ -301,13 +251,11 @@ function sortingDecreasingDensity() {
     return all_countries_sorted
 }
 
-console.log('\nTableau des pays par ordre décroissant de densité de population')
-console.table(sortingDecreasingDensity())
-
 /**
  * Q8 - moreTopLevelDomains() : Tableau des pays ayant plusieurs
  * Top Level Domains Internet.
  * 
+ * Permet d'avoir les pays avec plusieurs Top Level domain
  * @return un tableau ayant les pays avec plusieurs top level domais
  */
 
@@ -325,6 +273,3 @@ function moreTopLevelDomains() {
     })
     return moreTopLevelDomains
 }
-
-console.log('\nTableau des pays ayant plusieurs top level domain')
-console.table(moreTopLevelDomains())

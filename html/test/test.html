@@ -6,11 +6,84 @@
     <title>Test page</title>
 </head>
 <body>
-    
     <script src="../data/countries.js"></script>
     <script src="../data/class_country.js"></script>
     <script src="../data/class_currency.js"></script>
     <script src="../data/class_language.js"></script>
     <script src="../test/test.js"></script>
+    <h1>Bienvenue sur la page de test</h1>
+    <p>Chaque fonction peut être affichée dans la console via le clic sur son bouton.</p>
+    <label>Q1 - outsideTheContinent() - Permet d'afficher les pays qui ont au moins un voisin hors de leur continent</label>
+    <button type="button" onclick='printResponse(1)'>Affichage dans la console - Q1</button>
+    <br>
+    <label>Q2 - moreNeighbors() - Permet d'afficher les pays ayant le plus grand nombre de voisins.</label>
+    <button type="button" onclick='printResponse(2)'>Affichage dans la console - Q2</button>
+    <br>
+    <label>Q3 - neighborless() - Permet d'afficher les pays n'ayant aucuns voisins</label>
+    <button type="button" onclick='printResponse(3)'>Affichage dans la console - Q3</button>
+    <br>
+    <label>Q4 - moreLanguages() - Permet d'obtenir un tableau des pays ayant le plus grand nombre de langues dans leur pays</label>
+    <button type="button" onclick='printResponse(4)'>Affichage dans la console - Q4</button>
+    <br>
+    <label>Q5 - withCommonLanguage() - Permet de donner les pays ou un voisins parle une des langues du pays</label>
+    <button type="button" onclick='printResponse(5)'>Affichage dans la console - Q5</button>
+    <br>
+    <label>Q6 - withoutCommonCurrency() - Permet de récupérer les pays voisins n'ayant pas leur(s) monnaie(s)</label>
+    <button type="button" onclick='printResponse(6)'>Affichage dans la console - Q6</button>
+    <br>
+    <label>Q7 - sortingDecreasingDensity() - Permet de donner les pays triés pas ordre décroissant de densité de population</label>
+    <button type="button" onclick='printResponse(7)'>Affichage dans la console - Q7</button>
+    <br>
+    <label>Q8 - moreTopLevelDomains() - Permet d'avoir les pays avec plusieurs Top Level domain</label>
+    <button type="button" onclick='printResponse(8)'>Affichage dans la console - Q8</button>
+    <br>
+    <label>Afficher toutes les réponse</label>
+    <button type="button" onclick="for (let index = 1; index <= 8; index++) {printResponse(index)}">Afficher toutes les réponses</button>
+<script>
+    function printResponse(question) {
+        switch (question) {
+            case 1:
+                console.log('\nLes pays ayant des voisins en dehors de leur continent')
+                console.table(outsideTheContinent())
+                break
+            case 2:
+                console.log('\nAffichage des pays ayant le plus de voisin')
+                moreNeighbors().forEach(country => {
+                    console.log(`Le pays: ${country["frenchName"]} avec ${country.traductionOfBorders}`)
+                })
+                break
+            case 3:
+                console.log('\nPays n\'ayant pas de voisins')
+                console.table(neighborless(),'_frenchName')
+                break
+            case 4:
+                console.log('Pays ou le plus de langues sont parlées')
+                moreLanguages().forEach(country => {
+                    console.log(country.toString())
+                    console.log(country.getLanguages.toString())
+                    console.log('\n')
+                })
+                break
+            case 5:
+                console.log('\nAffichage des pays avec un voisins parlant la même langue qu\'un pays')
+                console.table(withCommonLanguage())
+                break
+            case 6:
+                console.log('\nPays dont les voisins n\'ont pas au moins une monnaie en commun')
+                console.table(withoutCommonCurrency())
+                break
+            case 7:
+                console.log('\nTableau des pays par ordre décroissant de densité de population')
+                console.table(sortingDecreasingDensity())
+                break
+            case 8:
+                console.log('\nTableau des pays ayant plusieurs top level domain')
+                console.table(moreTopLevelDomains())
+                break
+            default:
+                break
+        }
+    }
+</script>
 </body>
 </html>
