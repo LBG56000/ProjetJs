@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Template HTML</title>
+</head>
+<body>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th class="title">Nom Français</th>
+                    <th class="title">Population</th>
+                    <th class="title">Surface</th>
+                    <th class="title">Densité de population</th>
+                    <th class="title">Continent d'appartenance</th>
+                    <th class="title">Drapeau</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="cell">France</td>
+                    <td class="cell">67 000 0000</td>
+                    <td class="cell">551 695 km²</td>
+                    <td class="cell">106,5</td>
+                    <td class="cell">Europe</td>
+                    <td class="cell"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Flag_of_France.svg" alt="" width="100" height="75"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <style>
+        .cell,.title{
+            text-align: center;
+            font-size: 1.5em;
+            padding-right: 2em; 
+        }
+        .table-container{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .table-container > table{
+            border: solid 1px gray;
+            border-radius: 1em;
+        }
+        .title{
+            border-bottom: 1px solid gray;
+        }
+    </style>
+</body>
+</html>
