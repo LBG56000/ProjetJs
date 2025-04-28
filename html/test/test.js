@@ -4,6 +4,16 @@
 const all_countries = Country.all_countries
 
 /**
+ * Récupération de l'ensemble des langues
+ */
+const all_languages = Language.all_languages
+
+/**
+ * Récupération de l'ensemble des monnaies
+ */
+const all_currencies = Currency.all_currencies
+
+/**
  * Q1 - outsideTheContinent() : 
  * Tableau JS des pays (objets Country) dont au moins 
  * un pays frontalier n’est pas dans le même continent.
@@ -165,7 +175,7 @@ function withCommonLanguage() {
                 if (languageCommon.length > 0) {
 
                     // Récupération de la langue commune
-                    let language = Language.all_languages[languageCommon[0]]
+                    let language = all_languages[languageCommon[0]]
                     
                     // Ajout dans l'objet du voisin et de la langue commune
                     withCommonLanguage[country.frenchName] = {
