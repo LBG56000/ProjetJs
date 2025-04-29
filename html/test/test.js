@@ -38,7 +38,7 @@ function outsideTheContinent() {
             bordersOfCoutry.forEach(border => {
 
             // On comparer chaque voisin et on le compare avec la region de l'object Country
-            if (border["region"] !== country["region"]) {
+            if (border["region"] !== country["region"] && bordersOutsideTheContinent.includes(country) === false) {
                 // On ajoute le pays dans le tableau bordersOutsideTheContinent
                 bordersOutsideTheContinent.push(country)
             }
@@ -63,7 +63,6 @@ function moreNeighbors() {
     // Variable changeante permettant de stocker le longueurs du tableau voisins
     let maxBorders = 0
 
-    console.log('test');
     // Parcourts du tableau contenant les pays
     Object.values(all_countries).forEach(country => {
         
