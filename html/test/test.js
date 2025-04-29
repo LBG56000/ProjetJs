@@ -54,26 +54,40 @@ function outsideTheContinent() {
  * Affichez aussi les voisins
  * 
  * Permet d'afficher les pays avec le plus de voisins ainsi que les voisins associés
+ * 
+ * @return un tableau contenant les pays avec le plus de voisins
  */
 function moreNeighbors() {
+
+    // Copie du tableau all_countries
+    const all_countries_sorted_by_neighbors = Object.values(all_countries)
+    
+    // Tri du tableau sur le nombre de voisins
+    all_countries_sorted_by_neighbors.sort((country1,country2) => {
+
+        // Comparaison du nombre de voisins
+        return country1.getBorders().length - country2.getBorders().length
+    })
 
     // Tableau contenant les futurs pays avec le plus de voisins
     let moreNeighbors = []
 
-    // Variable changeante permettant de stocker le longueurs du tableau voisins
+    // Variable changeante permettant de stocker la longueurs du tableau voisins
     let maxBorders = 0
 
-    // Parcourts du tableau contenant les pays
-    Object.values(all_countries).forEach(country => {
+    // Parcourts du tableau contenant les pays triés
+    Object.values(all_countries_sorted_by_neighbors).forEach(country => {
         
         // Initialisation des voisins de pays
         const borders = country.getBorders()
         
-        if (borders !== undefined) {
+        if (borders !== undefined && borders.length !== 0) {
+
             // Récupération de la longueur du tableau des voisins
-            let numberOfBorders = borders.length
-            if (numberOfBorders >= maxBorders) {
+            const numberOfBorders = borders.length
+            if (numberOfBorders > maxBorders) {
                 maxBorders = numberOfBorders
+
                 // Ajout dans le tableau du pays avec le plus de voisins
                 moreNeighbors.push(country)
             }
@@ -85,7 +99,9 @@ function moreNeighbors() {
 
 /**
  * Q3 - neighborless() : Tableau des pays n’ayant aucun voisin
+ * 
  * Permet d'afficher les pays n'ayant aucuns voisins
+ * 
  * @return le tableau des pays n'ayant aucun voisin
  */
 function neighborless() {
@@ -97,7 +113,7 @@ function neighborless() {
 
         // Initialisation des voisins de pays
         const borders = country.getBorders()
-        if (borders.length === 0) {
+        if (borders.length === 0 && borders) {
             neighborless.push(country)
         }
     })
@@ -113,6 +129,17 @@ function neighborless() {
  */
 
 function moreLanguages() {
+
+    // Copie du tableau all_countries
+    const all_countries_sorted_by_language = Object.values(all_countries)
+    
+    // Tri du tableau sur le nombre de langues du pays
+    all_countries_sorted_by_language.sort((country1,country2) => {
+
+        // Comparaison du nombre de langues
+        return country1.getLanguages.length - country2.getLanguages.length
+    })
+
     // Tableau ou seront ajouter les futurs objets Country
     let countryWithMoreLanguages = []
 
@@ -120,13 +147,13 @@ function moreLanguages() {
     let maxLanguages = 0
 
     // Parcourt du tableau de pays
-    Object.values(all_countries).forEach(country => {
+    Object.values(all_countries_sorted_by_language).forEach(country => {
         // Récupération des langues du pays
         const languagesOfCountry = country.getLanguages
-        if (languagesOfCountry.length !== 0) {
+        if (languagesOfCountry !== undefined && languagesOfCountry.length !== 0) {
             // Récupération de la longueur du tableau
             const numberOfLanguages = languagesOfCountry.length
-            if (numberOfLanguages >= maxLanguages) {
+            if (numberOfLanguages > maxLanguages) {
                 maxLanguages = numberOfLanguages
                 // Ajout du pays
                 countryWithMoreLanguages.push(country)
@@ -145,6 +172,8 @@ function moreLanguages() {
  */
 
 function withCommonLanguage() {
+
+    // Tableau contenant les futurs pays répondant à la condition
     let withCommonLanguage = {}
 
     Object.values(all_countries).forEach(country => {
@@ -197,6 +226,8 @@ function withCommonLanguage() {
  */
 
 function withoutCommonCurrency() {
+
+    // Tableau contenant les futurs pays répondant à la condition
     let withoutCommonCurrency = {}
     
     Object.values(all_countries).forEach(country => {
@@ -269,6 +300,8 @@ function sortingDecreasingDensity() {
  */
 
 function moreTopLevelDomains() {
+
+    // Tableau contenant les futurs pays ayant plusieurs top level domain
     let moreTopLevelDomains = {}
 
     // Parcourt des pays
