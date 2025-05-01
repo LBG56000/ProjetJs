@@ -8,6 +8,15 @@ const all_countries = Country.all_countries
  */
 const colums = ['Nom Français', 'Population','Surface','Densité de population','Continent d\'appartenance','Drapeau']
 
+// Ajout d'une ligne au table
+$("thead").append("<tr></tr>")
+
+
+// Ajout des noms de colonne
+$.map(colums, (colum) => {
+    $("thead > tr").append(`<th>${colum}</th>`)
+})
+
 /**
  * Fonction permattant d'ajouter le tableau avec les différents pays
  */
@@ -19,16 +28,6 @@ function printCountriesTable() {
 
     // Ajout d'un haut de tableau
     $("table").append("<thead></thead>")
-    
-
-    // Ajout d'une ligne au table
-    $("thead").append("<tr></tr>")
-    
-
-    // Ajout des noms de colonne
-    $.map(colums, (colum) => {
-        $("thead > tr").append(`<th>${colum}</th>`)
-    })
     
     // Ajout d'un corps de tableau
     $("table").append("<tbody></tbody>")
