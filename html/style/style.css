@@ -83,6 +83,7 @@ button {
 .sort-container{
     display: flex;
     justify-content: center;
+    font-size: 1.4em;
 }
 
 .input-container{
