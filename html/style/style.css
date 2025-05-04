@@ -46,7 +46,7 @@ button {
     width: 5em;
 }
 
-.button_container{
+.button-container{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -80,6 +80,7 @@ button {
     justify-content: flex-end;
 }
 
+/** Style relatif à la zone de tri*/
 .sort-container{
     display: flex;
     justify-content: center;

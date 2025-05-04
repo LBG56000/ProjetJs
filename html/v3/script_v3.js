@@ -27,7 +27,7 @@ const buttons = ['PRÉC', 'SUIV','Fermer']
  * Définiion des classes utilisées
  */
 const classes = {
-    buttonContainer:'button_container',
+    buttonContainer:'button-container',
     showDetails:'show-details',
     showPicture:'show-picture',
     popupContent:'popup-content',
@@ -162,10 +162,10 @@ function closePopup() {
 $("table").on("click", `.show-picture`, function() {
     // Récupération de l'id du parent contenant le code du pays
     const parentId = $(this).parent().attr('id')
-    addPopupContent(all_countries[`${parentId}`],'img')
+    addPopupContent(all_countries[parentId],'img')
 })
 
 $("table").on("click", `.show-details`, function() {
     const parentId = $(this).parent().attr('id')
-    addPopupContent(all_countries[`${parentId}`],'table')
+    addPopupContent(all_countries[parentId],'table')
 })
