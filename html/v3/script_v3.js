@@ -76,11 +76,11 @@ function printCountriesTable() {
  */
 function determinePageNumber (actionButton){
     switch (actionButton) {
-        case 'PRÉC':
+        case buttons[0]:
             if (pageNumber > 0) pageNumber -= 1
             break
 
-        case 'SUIV':
+        case buttons[1]:
             if ((pageNumber + 1) * elements_per_page < Object.values(all_countries).length) {
                 pageNumber += 1
             }
@@ -138,10 +138,11 @@ function addPopupContent(country,contentType) {
             $(`.${classes[2]} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
             $(`.${classes[2]} tbody`).append(`<tr><th>Population</th><td>${country.population || 'N/A'}</td></tr>`)
             $(`.${classes[2]} tbody`).append(`<tr><th>Voisins</th><td>${country.traductionOfBorders || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Superficie</th><td>${country.area || 'N/A'}</td></tr>`)
+            $(`.${classes[2]} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'}</td></tr>`)
             $(`.${classes[2]} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
             $(`.${classes[2]} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
             $(`.${classes[2]} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)        
+            $(`.${classes[2]} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity().toFixed(3) || 'N/A'}</td></tr>`)         
         break
         default:
             break

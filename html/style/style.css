@@ -79,3 +79,13 @@ button {
     display: flex;
     justify-content: flex-end;
 }
+
+.sort-container{
+    display: flex;
+    justify-content: center;
+    font-size: 1.4em;
+}
+
+.input-container{
+    margin: 0 1em;
+}
