@@ -11,7 +11,7 @@ const elements_per_page = 25
 /**
  * Création de la variable contenant la page actuelle
  */
-let pageNumber = -1
+let pageNumber = 0
 
 /**
  * L'ensembles des colonnes à ce jour
@@ -26,8 +26,14 @@ const buttons = ['PRÉC', 'SUIV','Fermer']
 /**
  * Définiion des classes utilisées
  */
-
-const classes = ['showDetails', 'showPicture','popup-content','popup','popup-button-container']
+const classes = {
+    buttonContainer:'button_container',
+    showDetails:'show-details',
+    showPicture:'show-picture',
+    popupContent:'popup-content',
+    popup:'popup',
+    popupButtonContainer:'popup-button-container'
+}
 
 // Ajout d'un tableau sur la page html
 $("body").append("<table></table>")
@@ -58,12 +64,12 @@ function printCountriesTable() {
     
         // Création de la ligne avec les différentes information demandées
         const countryLine = `<tr id="${country.codeAlpha3}">
-        <td class="${classes[0]}" >${country.frenchName || 'N/A'}</td>
-        <td class="${classes[0]}">${country.population || 'N/A'}</td>
-        <td class="${classes[0]}">${country.area || 'N/A'}</td>
-        <td class="${classes[0]}">${country.getPopDensity() || 'N/A'}</td>
-        <td class="${classes[0]}">${country.region || 'N/A'}</td>
-        <td class="${classes[1]}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
+        <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
+        <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
+        <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
+        <td class="${classes.showDetails}">${country.getPopDensity() || 'N/A'}</td>
+        <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
+        <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
         </tr>`
         
         // Ajout de la ligne au corps du tableau
@@ -95,22 +101,18 @@ function determinePageNumber (actionButton){
 /**
  * Condition permettant de n'appeller qu'une seule fois la fonction d'affichage
  */
-if (pageNumber === -1) {
-    // Appel de la fonction permettant d'ajouter la table
-    pageNumber = 0
-    printCountriesTable()
-}
+if (pageNumber === 0) printCountriesTable()
 
 /**
  * Ajout du container des boutons
  */
-$("body").append("<div class=button_container></div>")
+$("body").append(`<div class=${classes.buttonContainer}></div>`)
 
 /**
  * Ajout des boutons dans le container permettant de faire défiler les pages
  */
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
 
 /**
  * Fonction permettant d'ajouter le contenu de la popup
@@ -119,51 +121,51 @@ $(".button_container").append(`<button onClick=determinePageNumber('${buttons[1]
  */
 function addPopupContent(country,contentType) {
     //  Création de la popup
-    $("body").append('<div class="popup"><div class="popup-content"></div></div>')
+    $("body").append(`<div class=${classes.popup}><div class=${classes.popupContent}></div></div>`)
 
     // Regard du type de contenu à ajouté
     switch (contentType) {
         case 'img':
 
             // Ajout de l'image dans la pop-up
-            $(`.${classes[2]}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="260" height="150" title=Drapeau_${country.frenchName}></img></td>`)
+            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="260" height="150" title=Drapeau_${country.frenchName}></img></td>`)
             break
         case 'table':
 
             // Ajout d'un tableau avec le détail du pays
-            $(`.${classes[2]}`).append(`<h1>Nom: ${country.frenchName || 'N/A'}</h1>`)
-            $(`.${classes[2]}`).append("<table><tbody></tbody></table>")
-            $(`.${classes[2]} tbody`).append(`<tr><th>Code</th><td>${country.codeAlpha3 || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Capitale</th><td>${country.capitale || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Population</th><td>${country.population || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Voisins</th><td>${country.traductionOfBorders || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)        
-            $(`.${classes[2]} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity().toFixed(3) || 'N/A'}</td></tr>`)         
+            $(`.${classes.popupContent}`).append(`<h1>Nom: ${country.frenchName || 'N/A'}</h1>`)
+            $(`.${classes.popupContent}`).append("<table><tbody></tbody></table>")
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Code</th><td>${country.codeAlpha3 || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Capitale</th><td>${country.capitale || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Population</th><td>${country.population || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Voisins</th><td>${country.traductionOfBorders || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)        
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity().toFixed(3) || 'N/A'}</td></tr>`)         
         break
         default:
             break
     }
-    $(`.${classes[2]}`).append(`<div class=${classes[4]}><button onclick=closePopup()>${buttons[2]}</button></div>`)
+    $(`.${classes.popupContent}`).append(`<div class=${classes.popupButtonContainer}><button onclick=closePopup()>${buttons[2]}</button></div>`)
 }
 
 function closePopup() {
-    $(`.${classes[3]}`).remove()
+    $(`.${classes.popup}`).remove()
 }
 
 /**
  * Ajout des clics sur les cellules contenant une certaine classe
  */
-$("table").on("click", `.showPicture`, function() {
+$("table").on("click", `.show-picture`, function() {
     // Récupération de l'id du parent contenant le code du pays
     const parentId = $(this).parent().attr('id')
     addPopupContent(all_countries[`${parentId}`],'img')
 })
 
-$("table").on("click", `.showDetails`, function() {
+$("table").on("click", `.show-details`, function() {
     const parentId = $(this).parent().attr('id')
     addPopupContent(all_countries[`${parentId}`],'table')
 })

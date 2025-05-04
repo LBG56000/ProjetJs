@@ -11,7 +11,7 @@ const elements_per_page = 25
 /**
  * Création de la variable contenant la page actuelle
  */
-let pageNumber = -1
+let pageNumber = 0
 
 /**
  * L'ensembles des colonnes à ce jour
@@ -22,6 +22,13 @@ const colums = ['Nom Français', 'Population', 'Surface', 'Densité de populatio
  * Définition des boutons à utiliser
 */
 const buttons = ['PRÉC', 'SUIV']
+
+/**
+ * Définiion des classes utilisées
+ */
+const classes = {
+    buttonContainer:'button_container'
+}
 
 
 // Ajout d'un tableau sur la page html
@@ -90,21 +97,17 @@ function determinePageNumber (actionButton){
 /**
  * Condition permettant de n'appeller qu'une seule fois la fonction d'affichage
  */
-if (pageNumber === -1) {
-    // Appel de la fonction permettant d'ajouter la table
-    pageNumber = 0
-    printCountriesTable()
-}
+if (pageNumber === 0) printCountriesTable()
 
 /**
  * Ajout du container des boutons
  */
-$("body").append("<div class=button_container></div>")
+$("body").append(`<div class=${classes.buttonContainer}></div>`)
 
 /**
  * Ajout des boutons dans le container
  */
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
 
 
