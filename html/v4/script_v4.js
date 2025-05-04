@@ -40,10 +40,17 @@ const classes = {
     popupButtonContainer:'popup-button-container',
     sortContainer:'sort-container',
     inputContainer:'input-container',
-    optionsRegion:'options-region',
-    optionsLanguages:'options-languages',
-    inputCountry:'input-country'
+    selectRegion:'select-region',
+    selectLanguage:'select-language',
+    inputCountry:'input-country',
+    optionRegion:'option-region',
+    optionLanguage:'option-language'
 }
+
+/**
+ * Contante contenant la chaine renvoyée si aucun filtre n'est sélectionné dans les select
+ */
+const notFiltersSelected = 'choisir-une-option'
 
 /**
  * Variable contenant les futures pays triés ou divisié en 25
@@ -70,12 +77,9 @@ $.map(colums, (colum) => {
 /**
  * Fonction permattant d'ajouter le tableau avec les différents pays
  */
-function printCountriesTable(sorts = '') {
-
+function printCountriesTable() {
     // Ajout d'un corps de tableau
     $("table").append("<tbody></tbody>")
-
-    allCountriesSliced = Object.values(all_countries).slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
 
     // Ajout des pays dans le corps du tableau
     $.map(Object.values(allCountriesSliced), (country) => {
@@ -194,9 +198,13 @@ function addDifferentSort() {
     // Ajout des langues
     const allLanguages = addAllLanguages()
 
+    let regionSelected = notFiltersSelected
+    let languageSelected = notFiltersSelected
+    let countryNameTyped = ''
+
     // Création des différents éléments HTML (2 select et un input)
-    const selectRegion = `<div class=${classes.inputContainer}><label>Choississez un continent </label><select class=${classes.optionsRegion}></select></div>`
-    const selectLanguage = `<div class=${classes.inputContainer}><label>Choississez une langue </label><select class=${classes.optionsLanguages}></select></div>`
+    const selectRegion = `<div class=${classes.inputContainer}><label>Choississez un continent </label><select class=${classes.selectRegion}></select></div>`
+    const selectLanguage = `<div class=${classes.inputContainer}><label>Choississez une langue </label><select class=${classes.selectLanguage}></select></div>`
     const selectCountry = `<div class=${classes.inputContainer}><label>Entrez un nom de pays (anglais/français) </label><input type=search class=${classes.inputCountry}></input></div>`
 
     // Ajout dans le DOM des éléments permettant le tri
@@ -207,15 +215,29 @@ function addDifferentSort() {
     // Ajout des différentes options de continent
     $.map(allRegions, (region) => {
         // Traitement sur la value permettant une identification plus facile par la suite
-        $(`.${classes.optionsRegion}`).append(`<option value=${region.replaceAll(' ','').toLowerCase()}>${region}</option>`);
+        $(`.${classes.selectRegion}`).append(`<option value=${region.toLowerCase().replaceAll(' ','-')} class=${classes.optionRegion}>${region}</option>`);
     })
 
     // Ajout des différentes options de langues
     $.map(allLanguages, (language) => {
-        $(`.${classes.optionsLanguages}`).append(`<option value=${language.replaceAll(' ','').toLowerCase()}>${language}</option>`);
+        $(`.${classes.selectLanguage}`).append(`<option value=${language.toLowerCase().replaceAll(' ','-')} class=${classes.optionLanguage}>${language}</option>`);
+    })
+
+    $(".select-region").on("change", function () {
+        regionSelected = $(this).val().toLowerCase()
+        sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
+    })
+    
+    $(".select-language").on("change", function () {
+        languageSelected = $(this).val().toLowerCase()
+        sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
+    })
+    
+    $(".input-country").on("keypress", function () {
+        countryNameTyped = $(this).val().trim()
+        sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
     })
 }
-
 addDifferentSort()
 
 /**
@@ -264,8 +286,26 @@ function addAllLanguages() {
     return allLanguages
 }
 
-console.log($( ".options-region" ).val())
+function sortedByDifferentsFilters(regionSelected, languageSelected, countryNameTyped) {
+    console.log(languageSelected)
+    let countriesFiltered = Object.values(all_countries).filter(country => {
+        const countryRegion = country.region.toLowerCase().replaceAll(' ','-') || ''
+        const countryLanguages = country.getLanguages || undefined
 
-function sortedByDifferentsFilters(sorts, countries) {
-    
+        // Renvoie un booléen permettant de savoir si c'est la même région
+        const isTheSameRegion = regionSelected === notFiltersSelected || regionSelected === countryRegion
+
+        const isTheSameLanguage = languageSelected === notFiltersSelected || Object.values(countryLanguages).some(language => language.englishName.toLowerCase().replaceAll(' ','-') === languageSelected)
+
+        // A importer les nom anglais dans pays
+        const countainCountryName = true
+
+        return isTheSameLanguage && isTheSameRegion
+    })
+
+    pageNumber = 0
+    allCountriesSliced = Object.values(countriesFiltered).slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
+    $("tbody").remove()
+    printCountriesTable()
+    console.log(countriesFiltered)
 }
