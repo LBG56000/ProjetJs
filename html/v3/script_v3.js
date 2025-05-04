@@ -11,7 +11,7 @@ const elements_per_page = 25
 /**
  * Création de la variable contenant la page actuelle
  */
-let pageNumber = -1
+let pageNumber = 0
 
 /**
  * L'ensembles des colonnes à ce jour
@@ -95,11 +95,7 @@ function determinePageNumber (actionButton){
 /**
  * Condition permettant de n'appeller qu'une seule fois la fonction d'affichage
  */
-if (pageNumber === -1) {
-    // Appel de la fonction permettant d'ajouter la table
-    pageNumber = 0
-    printCountriesTable()
-}
+if (pageNumber === 0) printCountriesTable()
 
 /**
  * Ajout du container des boutons
