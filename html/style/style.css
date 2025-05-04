@@ -28,7 +28,7 @@ tbody tr:nth-child(even){
     background-color: #f3f3f3;
 }
 
-table .showDetails, table .showPicture{
+table .show-details, table .show-picture{
     cursor: pointer;   
 }
 

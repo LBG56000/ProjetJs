@@ -23,6 +23,13 @@ const colums = ['Nom Français', 'Population', 'Surface', 'Densité de populatio
 */
 const buttons = ['PRÉC', 'SUIV']
 
+/**
+ * Définiion des classes utilisées
+ */
+const classes = {
+    buttonContainer:'button_container'
+}
+
 
 // Ajout d'un tableau sur la page html
 $("body").append("<table></table>")
@@ -95,12 +102,12 @@ if (pageNumber === 0) printCountriesTable()
 /**
  * Ajout du container des boutons
  */
-$("body").append("<div class=button_container></div>")
+$("body").append(`<div class=${classes.buttonContainer}></div>`)
 
 /**
  * Ajout des boutons dans le container
  */
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
 
 
