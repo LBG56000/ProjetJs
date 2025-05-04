@@ -76,11 +76,11 @@ function printCountriesTable() {
  */
 function determinePageNumber (actionButton){
     switch (actionButton) {
-        case 'PRÉC':
+        case buttons[0]:
             if (pageNumber > 0) pageNumber -= 1
             break
 
-        case 'SUIV':
+        case buttons[1]:
             if ((pageNumber + 1) * elements_per_page < Object.values(all_countries).length) {
                 pageNumber += 1
             }

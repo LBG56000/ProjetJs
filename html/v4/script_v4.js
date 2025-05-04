@@ -27,7 +27,10 @@ const buttons = ['PRÉC', 'SUIV','Fermer']
  * Définiion des classes utilisées
  */
 
-const classes = ['showDetails', 'showPicture','popup-content','popup','popup-button-container']
+const classes = ['showDetails', 'showPicture','popup-content','popup','popup-button-container','sort-container','input-container','options-continent','options-languages','input-country']
+
+// Création du conteneur ayant les trois filtres demandés
+$("body").append(`<div class=${classes[5]}></div>`)
 
 // Ajout d'un tableau sur la page html
 $("body").append("<table></table>")
@@ -76,11 +79,11 @@ function printCountriesTable() {
  */
 function determinePageNumber (actionButton){
     switch (actionButton) {
-        case 'PRÉC':
+        case buttons[0]:
             if (pageNumber > 0) pageNumber -= 1
             break
 
-        case 'SUIV':
+        case buttons[1]:
             if ((pageNumber + 1) * elements_per_page < Object.values(all_countries).length) {
                 pageNumber += 1
             }
@@ -166,3 +169,15 @@ $("table").on("click", `.showDetails`, function() {
     const parentId = $(this).parent().attr('id')
     addPopupContent(all_countries[`${parentId}`],'table')
 })
+
+function addDifferentSort() {
+    const selectRegion = `<div class=${classes[6]}><label>Choississez un continent</label><select class=${classes[7]}></select></div>`
+    const selectLanguage = `<div class=${classes[6]}><label>Choississez une langue</label><select class=${classes[8]}></select></div>`
+    const selectCountry = `<div class=${classes[6]}><label>Entrez un nom de pays (anglais/français)</label><input type=search class=${classes[9]}></input></div>`
+
+    $(`.${classes[5]}`).append(selectRegion)
+    $(`.${classes[5]}`).append(selectLanguage)
+    $(`.${classes[5]}`).append(selectCountry)
+}
+
+addDifferentSort()
