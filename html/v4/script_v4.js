@@ -55,7 +55,7 @@ const notFiltersSelected = 'choisir-une-option'
 /**
  * Variable contenant les futures pays triés ou divisié en 25
  */
-let allCountriesSliced = Object.values(all_countries).slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
+let filteredCountries = Object.values(all_countries)
 
 // Création du conteneur ayant les trois filtres demandés
 $("body").append(`<div class=${classes.sortContainer}></div>`)
@@ -78,25 +78,37 @@ $.map(colums, (colum) => {
  * Fonction permattant d'ajouter le tableau avec les différents pays
  */
 function printCountriesTable() {
+    $("tbody").remove()
+
     // Ajout d'un corps de tableau
     $("table").append("<tbody></tbody>")
 
-    // Ajout des pays dans le corps du tableau
-    $.map(Object.values(allCountriesSliced), (country) => {
+    const allCountriesSliced = filteredCountries.slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
 
-        // Création de la ligne avec les différentes information demandées
-        const countryLine = `<tr id="${country.codeAlpha3}">
-        <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
-        <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
-        <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
-        <td class="${classes.showDetails}">${country.getPopDensity() || 'N/A'}</td>
-        <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
-        <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
-        </tr>`
-
+    if (allCountriesSliced.length === 0) {
+        const countryEmpty = "<tr><td id=emptyCountry colspan=6>Aucuns pays ne correpond à votre recherche</td></tr>"
+        $("tbody").append(countryEmpty)
+    } else {
+        // Ajout des pays dans le corps du tableau
+        $.map(Object.values(allCountriesSliced), (country) => {
+    
+            // Création de la ligne avec les différentes information demandées
+            const countryLine = `<tr id="${country.codeAlpha3}">
+            <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.getPopDensity() || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
+            <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
+            </tr>`
+    
+    
         // Ajout de la ligne au corps du tableau
         $("tbody").append(countryLine)
     })
+        
+    }
+
 }
 
 /**
@@ -109,14 +121,15 @@ function determinePageNumber(actionButton) {
             break
 
         case buttons[1]:
-            if ((pageNumber + 1) * elements_per_page < Object.values(all_countries).length) {
+            if ((pageNumber + 1) * elements_per_page < filteredCountries
+            .length) {
                 pageNumber += 1
             }
             break
         default:
+            console.log('test')
             break
-    }
-    $("tbody").remove()
+        }
     printCountriesTable()
 }
 
@@ -148,9 +161,12 @@ function addPopupContent(country, contentType) {
     // Regard du type de contenu à ajouté
     switch (contentType) {
         case 'img':
+            // Récupération de la hauteur et largeur de l'image permettant ainsi de la grossir
+            let widthImage = $("table td img").attr("width")
+            let heightImage = $("table td img").attr("height")
 
             // Ajout de l'image dans la pop-up
-            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="260" height="150" title=Drapeau_${country.frenchName}></img></td>`)
+            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width=${widthImage * 7} height=${heightImage * 7} title=Drapeau_${country.frenchName}></img></td>`)
             break
         case 'table':
 
@@ -223,6 +239,7 @@ function addDifferentSort() {
         $(`.${classes.selectLanguage}`).append(`<option value=${language.toLowerCase().replaceAll(' ','-')} class=${classes.optionLanguage}>${language}</option>`);
     })
 
+    // Création des écouteurs sur les différents champs et appel de la fonction
     $(".select-region").on("change", function () {
         regionSelected = $(this).val().toLowerCase()
         sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
@@ -233,8 +250,9 @@ function addDifferentSort() {
         sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
     })
     
-    $(".input-country").on("keypress", function () {
-        countryNameTyped = $(this).val().trim()
+    $(".input-country").on("input", function () {
+        // Normalisation de la saisie 
+        countryNameTyped = $(this).val().trim().toLowerCase()
         sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
     })
 }
@@ -286,26 +304,39 @@ function addAllLanguages() {
     return allLanguages
 }
 
+/**
+ * Fonction appelé lors de l'applicaction d'un ou plusieurs tris
+ * @param {la région sélectionnée} regionSelected 
+ * @param {la langue sélectionnée} languageSelected 
+ * @param {le nom écrit} countryNameTyped 
+ */
 function sortedByDifferentsFilters(regionSelected, languageSelected, countryNameTyped) {
-    console.log(languageSelected)
+
+    // Permet de trouver les différents pays contenant les trois filtres
     let countriesFiltered = Object.values(all_countries).filter(country => {
+
+        // Quelque mise en forme pour être sur de chercher sur des bases communes
         const countryRegion = country.region.toLowerCase().replaceAll(' ','-') || ''
         const countryLanguages = country.getLanguages || undefined
+        const countryNameFr = country.frenchName.toLowerCase()
+        const countryNameEn = country.englishName.toLowerCase()
 
         // Renvoie un booléen permettant de savoir si c'est la même région
         const isTheSameRegion = regionSelected === notFiltersSelected || regionSelected === countryRegion
 
+        // Renvoie un booléen si la langue sélectionnée est comprise dans le pays
         const isTheSameLanguage = languageSelected === notFiltersSelected || Object.values(countryLanguages).some(language => language.englishName.toLowerCase().replaceAll(' ','-') === languageSelected)
 
-        // A importer les nom anglais dans pays
-        const countainCountryName = true
-
-        return isTheSameLanguage && isTheSameRegion
+        // Renvoie un booléen si une partie d'un pays écrit correspond au nom français ou anglais
+        const countainCountryName = countryNameFr.includes(countryNameTyped) || countryNameEn.includes(countryNameTyped)
+        
+        return isTheSameLanguage && isTheSameRegion && countainCountryName
     })
 
+    // Nous renvoie sur la première page du tableau
     pageNumber = 0
-    allCountriesSliced = Object.values(countriesFiltered).slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
-    $("tbody").remove()
+    // Ré-affecte la variable pour quelle soit prise en compte dans la fonction d'affichage
+    filteredCountries = countriesFiltered
+    // Appel de la fonction d'affichage
     printCountriesTable()
-    console.log(countriesFiltered)
 }

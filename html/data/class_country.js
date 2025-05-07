@@ -13,9 +13,10 @@ class Country {
      * @param {le lien menant au drapeau} linkToImage 
      * @param {l'extension de domaine utilisé} domainExtension 
      */
-    constructor(codeAlpha3, frenchName, capitale, region, population, borders, area, languages, currencies, linkToImage, domainExtension) {
+    constructor(codeAlpha3, frenchName,englishName, capitale, region, population, borders, area, languages, currencies, linkToImage, domainExtension) {
         this._codeAlpha3 = codeAlpha3
         this._frenchName = frenchName
+        this._englishName = englishName
         this._capitale = capitale
         this._region = region
         this._population = population
@@ -46,6 +47,14 @@ class Country {
      */
     get frenchName() {
         return this._frenchName
+    }
+
+    /**
+     * Permet d'accèder à la propriété nomAnglais du pays
+     * @return nomFrançais
+     */
+    get englishName() {
+        return this._englishName
     }
 
     /**
@@ -227,6 +236,7 @@ function fill_countries() {
 
         // Déclaration des variables pour stocker les différentes informations trouvées et test pour savoir si elles sont définies
         let frenchName = element["translations"]["fr"] || undefined 
+        let englishName = element["name"] || undefined 
         let capital = element["capital"] || undefined
         let region = element["region"] || undefined
         let population = element["population"] || undefined
@@ -241,6 +251,7 @@ function fill_countries() {
         let country = new Country(
             key,
             frenchName,
+            englishName,
             capital,
             region,
             population,

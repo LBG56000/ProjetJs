@@ -126,9 +126,12 @@ function addPopupContent(country,contentType) {
     // Regard du type de contenu à ajouté
     switch (contentType) {
         case 'img':
+            // Récupération de la hauteur et largeur de l'image permettant ainsi de la grossir
+            let widthImage = $("table td img").attr("width")
+            let heightImage = $("table td img").attr("height")
 
             // Ajout de l'image dans la pop-up
-            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="260" height="150" title=Drapeau_${country.frenchName}></img></td>`)
+            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width=${widthImage * 7} height=${heightImage * 7} title=Drapeau_${country.frenchName}></img></td>`)
             break
         case 'table':
 

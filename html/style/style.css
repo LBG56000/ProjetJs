@@ -90,3 +90,7 @@ button {
 .input-container{
     margin: 0 1em;
 }
+
+#emptyCountry{
+    text-align: center;
+}
