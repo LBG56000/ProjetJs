@@ -52,6 +52,10 @@ button {
     justify-content: space-around;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 /** Style relatif à la popup**/
 .popup {
     display: flex;
@@ -91,6 +95,7 @@ button {
     margin: 0 1em;
 }
 
+/** Style relatif à un tableau vide données*/
 #emptyCountry{
     text-align: center;
 }

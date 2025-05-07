@@ -49,6 +49,9 @@ $.map(colums, (colum) => {
  * Fonction permattant d'ajouter le tableau avec les différents pays
  */
 function printCountriesTable() {
+
+    // Suppression du corps du tableau avant l'ajout
+    $("tbody").remove()
     
     // Ajout d'un corps de tableau
     $("table").append("<tbody></tbody>")
@@ -90,7 +93,6 @@ function determinePageNumber (actionButton){
         default:
             break
     }
-    $("tbody").remove()
     printCountriesTable()
 }
 

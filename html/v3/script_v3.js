@@ -53,6 +53,9 @@ $.map(colums, (colum) => {
  * Fonction permattant d'ajouter le tableau avec les différents pays
  */
 function printCountriesTable() {
+
+    // Suppression du corps du tableau avant l'ajout
+    $("tbody").remove()
     
     // Ajout d'un corps de tableau
     $("table").append("<tbody></tbody>")
@@ -94,7 +97,6 @@ function determinePageNumber (actionButton){
         default:
             break
     }
-    $("tbody").remove()
     printCountriesTable()
 }
 
@@ -138,6 +140,7 @@ function addPopupContent(country,contentType) {
             // Ajout d'un tableau avec le détail du pays
             $(`.${classes.popupContent}`).append(`<h1>Nom: ${country.frenchName || 'N/A'}</h1>`)
             $(`.${classes.popupContent}`).append("<table><tbody></tbody></table>")
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom anglais</th><td>${country.englishName || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Code</th><td>${country.codeAlpha3 || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Capitale</th><td>${country.capitale || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
