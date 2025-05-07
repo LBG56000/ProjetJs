@@ -16,7 +16,7 @@ const elements_per_page = 25
 /**
  * Création de la variable contenant la page actuelle
  */
-let pageNumber = -1
+let pageNumber = 0
 
 /**
  * L'ensembles des colonnes à ce jour
@@ -31,11 +31,34 @@ const buttons = ['PRÉC', 'SUIV', 'Fermer']
 /**
  * Définiion des classes utilisées
  */
+const classes = {
+    buttonContainer:'button-container',
+    showDetails:'show-details',
+    showPicture:'show-picture',
+    popupContent:'popup-content',
+    popup:'popup',
+    popupButtonContainer:'popup-button-container',
+    sortContainer:'sort-container',
+    inputContainer:'input-container',
+    selectRegion:'select-region',
+    selectLanguage:'select-language',
+    inputCountry:'input-country',
+    optionRegion:'option-region',
+    optionLanguage:'option-language'
+}
 
-const classes = ['showDetails', 'showPicture', 'popup-content', 'popup', 'popup-button-container', 'sort-container', 'input-container', 'options-region', 'options-languages', 'input-country']
+/**
+ * Contante contenant la chaine renvoyée si aucun filtre n'est sélectionné dans les select
+ */
+const notFiltersSelected = 'choisir-une-option'
+
+/**
+ * Variable contenant les futures pays triés ou divisié en 25
+ */
+let filteredCountries = Object.values(all_countries)
 
 // Création du conteneur ayant les trois filtres demandés
-$("body").append(`<div class=${classes[5]}></div>`)
+$("body").append(`<div class=${classes.sortContainer}></div>`)
 
 // Ajout d'un tableau sur la page html
 $("body").append("<table></table>")
@@ -55,28 +78,37 @@ $.map(colums, (colum) => {
  * Fonction permattant d'ajouter le tableau avec les différents pays
  */
 function printCountriesTable() {
+    $("tbody").remove()
 
     // Ajout d'un corps de tableau
     $("table").append("<tbody></tbody>")
 
-    const allCountriesSliced = Object.values(all_countries).slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
+    const allCountriesSliced = filteredCountries.slice(pageNumber * elements_per_page, (pageNumber + 1) * elements_per_page)
 
-    // Ajout des pays dans le corps du tableau
-    $.map(Object.values(allCountriesSliced), (country) => {
-
-        // Création de la ligne avec les différentes information demandées
-        const countryLine = `<tr id="${country.codeAlpha3}">
-        <td class="${classes[0]}" >${country.frenchName || 'N/A'}</td>
-        <td class="${classes[0]}">${country.population || 'N/A'}</td>
-        <td class="${classes[0]}">${country.area || 'N/A'}</td>
-        <td class="${classes[0]}">${country.getPopDensity() || 'N/A'}</td>
-        <td class="${classes[0]}">${country.region || 'N/A'}</td>
-        <td class="${classes[1]}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
-        </tr>`
-
+    if (allCountriesSliced.length === 0) {
+        const countryEmpty = "<tr><td id=emptyCountry colspan=6>Aucuns pays ne correpond à votre recherche</td></tr>"
+        $("tbody").append(countryEmpty)
+    } else {
+        // Ajout des pays dans le corps du tableau
+        $.map(Object.values(allCountriesSliced), (country) => {
+    
+            // Création de la ligne avec les différentes information demandées
+            const countryLine = `<tr id="${country.codeAlpha3}">
+            <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.getPopDensity() || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
+            <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
+            </tr>`
+    
+    
         // Ajout de la ligne au corps du tableau
         $("tbody").append(countryLine)
     })
+        
+    }
+
 }
 
 /**
@@ -89,36 +121,33 @@ function determinePageNumber(actionButton) {
             break
 
         case buttons[1]:
-            if ((pageNumber + 1) * elements_per_page < Object.values(all_countries).length) {
+            if ((pageNumber + 1) * elements_per_page < filteredCountries
+            .length) {
                 pageNumber += 1
             }
             break
         default:
+            console.log('test')
             break
-    }
-    $("tbody").remove()
+        }
     printCountriesTable()
 }
 
 /**
- * Condition permettant de n'appeller qu'une seule fois la fonction d'affichage
+ * Condition permettant d'appeler une seule fois la fonction d'affichage de la table au début
  */
-if (pageNumber === -1) {
-    // Appel de la fonction permettant d'ajouter la table
-    pageNumber = 0
-    printCountriesTable()
-}
+if (pageNumber === 0) printCountriesTable()
 
 /**
  * Ajout du container des boutons
  */
-$("body").append("<div class=button_container></div>")
+$("body").append(`<div class=${classes.buttonContainer}></div>`)
 
 /**
  * Ajout des boutons dans le container permettant de faire défiler les pages
  */
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
-$(".button_container").append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[0]}')>${buttons[0]}</button>`)
+$(`.${classes.buttonContainer}`).append(`<button onClick=determinePageNumber('${buttons[1]}')>${buttons[1]}</button>`)
 
 /**
  * Fonction permettant d'ajouter le contenu de la popup
@@ -127,53 +156,56 @@ $(".button_container").append(`<button onClick=determinePageNumber('${buttons[1]
  */
 function addPopupContent(country, contentType) {
     //  Création de la popup
-    $("body").append('<div class="popup"><div class="popup-content"></div></div>')
+    $("body").append(`<div class=${classes.popup}><div class=${classes.popupContent}></div></div>`)
 
     // Regard du type de contenu à ajouté
     switch (contentType) {
         case 'img':
+            // Récupération de la hauteur et largeur de l'image permettant ainsi de la grossir
+            let widthImage = $("table td img").attr("width")
+            let heightImage = $("table td img").attr("height")
 
             // Ajout de l'image dans la pop-up
-            $(`.${classes[2]}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="260" height="150" title=Drapeau_${country.frenchName}></img></td>`)
+            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width=${widthImage * 7} height=${heightImage * 7} title=Drapeau_${country.frenchName}></img></td>`)
             break
         case 'table':
 
             // Ajout d'un tableau avec le détail du pays
-            $(`.${classes[2]}`).append(`<h1>Nom: ${country.frenchName || 'N/A'}</h1>`)
-            $(`.${classes[2]}`).append("<table><tbody></tbody></table>")
-            $(`.${classes[2]} tbody`).append(`<tr><th>Code</th><td>${country.codeAlpha3 || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Capitale</th><td>${country.capitale || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Population</th><td>${country.population || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Voisins</th><td>${country.traductionOfBorders || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)
-            $(`.${classes[2]} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity().toFixed(3) || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent}`).append(`<h1>Nom: ${country.frenchName || 'N/A'}</h1>`)
+            $(`.${classes.popupContent}`).append("<table><tbody></tbody></table>")
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Code</th><td>${country.codeAlpha3 || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Capitale</th><td>${country.capitale || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Population</th><td>${country.population || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Voisins</th><td>${country.traductionOfBorders || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity().toFixed(3) || 'N/A'}</td></tr>`)
             break
         default:
             break
     }
-    $(`.${classes[2]}`).append(`<div class=${classes[4]}><button onclick=closePopup()>${buttons[2]}</button></div>`)
+    $(`.${classes.popupContent}`).append(`<div class=${classes.popupButtonContainer}><button onclick=closePopup()>${buttons[2]}</button></div>`)
 }
 
 function closePopup() {
-    $(`.${classes[3]}`).remove()
+    $(`.${classes.popup}`).remove()
 }
 
 /**
  * Ajout des clics sur les cellules contenant une certaine classe
  */
-$("table").on("click", `.showPicture`, function () {
+$("table").on("click", `.show-picture`, function () {
     // Récupération de l'id du parent contenant le code du pays
     const parentId = $(this).parent().attr('id')
-    addPopupContent(all_countries[`${parentId}`], 'img')
+    addPopupContent(all_countries[parentId], 'img')
 })
 
-$("table").on("click", `.showDetails`, function () {
+$("table").on("click", `.show-details`, function () {
     const parentId = $(this).parent().attr('id')
-    addPopupContent(all_countries[`${parentId}`], 'table')
+    addPopupContent(all_countries[parentId], 'table')
 })
 
 function addDifferentSort() {
@@ -182,28 +214,48 @@ function addDifferentSort() {
     // Ajout des langues
     const allLanguages = addAllLanguages()
 
+    let regionSelected = notFiltersSelected
+    let languageSelected = notFiltersSelected
+    let countryNameTyped = ''
+
     // Création des différents éléments HTML (2 select et un input)
-    const selectRegion = `<div class=${classes[6]}><label>Choississez un continent </label><select class=${classes[7]}></select></div>`
-    const selectLanguage = `<div class=${classes[6]}><label>Choississez une langue </label><select class=${classes[8]}></select></div>`
-    const selectCountry = `<div class=${classes[6]}><label>Entrez un nom de pays (anglais/français) </label><input type=search class=${classes[9]}></input></div>`
+    const selectRegion = `<div class=${classes.inputContainer}><label>Choississez un continent </label><select class=${classes.selectRegion}></select></div>`
+    const selectLanguage = `<div class=${classes.inputContainer}><label>Choississez une langue </label><select class=${classes.selectLanguage}></select></div>`
+    const selectCountry = `<div class=${classes.inputContainer}><label>Entrez un nom de pays (anglais/français) </label><input type=search class=${classes.inputCountry}></input></div>`
 
     // Ajout dans le DOM des éléments permettant le tri
-    $(`.${classes[5]}`).append(selectRegion)
-    $(`.${classes[5]}`).append(selectLanguage)
-    $(`.${classes[5]}`).append(selectCountry)
+    $(`.${classes.sortContainer}`).append(selectRegion)
+    $(`.${classes.sortContainer}`).append(selectLanguage)
+    $(`.${classes.sortContainer}`).append(selectCountry)
 
     // Ajout des différentes options de continent
     $.map(allRegions, (region) => {
         // Traitement sur la value permettant une identification plus facile par la suite
-        $(`.${classes[7]}`).append(`<option value=${region.replaceAll(' ','').toLowerCase()}>${region}</option>`);
+        $(`.${classes.selectRegion}`).append(`<option value=${region.toLowerCase().replaceAll(' ','-')} class=${classes.optionRegion}>${region}</option>`);
     })
 
     // Ajout des différentes options de langues
     $.map(allLanguages, (language) => {
-        $(`.${classes[8]}`).append(`<option value=${language.replaceAll(' ','').toLowerCase()}>${language}</option>`);
+        $(`.${classes.selectLanguage}`).append(`<option value=${language.toLowerCase().replaceAll(' ','-')} class=${classes.optionLanguage}>${language}</option>`);
+    })
+
+    // Création des écouteurs sur les différents champs et appel de la fonction
+    $(".select-region").on("change", function () {
+        regionSelected = $(this).val().toLowerCase()
+        sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
+    })
+    
+    $(".select-language").on("change", function () {
+        languageSelected = $(this).val().toLowerCase()
+        sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
+    })
+    
+    $(".input-country").on("input", function () {
+        // Normalisation de la saisie 
+        countryNameTyped = $(this).val().trim().toLowerCase()
+        sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
     })
 }
-
 addDifferentSort()
 
 /**
@@ -250,4 +302,41 @@ function addAllLanguages() {
     // Ajout de l'option de base
     allLanguages.unshift('Choisir une option')
     return allLanguages
+}
+
+/**
+ * Fonction appelé lors de l'applicaction d'un ou plusieurs tris
+ * @param {la région sélectionnée} regionSelected 
+ * @param {la langue sélectionnée} languageSelected 
+ * @param {le nom écrit} countryNameTyped 
+ */
+function sortedByDifferentsFilters(regionSelected, languageSelected, countryNameTyped) {
+
+    // Permet de trouver les différents pays contenant les trois filtres
+    let countriesFiltered = Object.values(all_countries).filter(country => {
+
+        // Quelque mise en forme pour être sur de chercher sur des bases communes
+        const countryRegion = country.region.toLowerCase().replaceAll(' ','-') || ''
+        const countryLanguages = country.getLanguages || undefined
+        const countryNameFr = country.frenchName.toLowerCase()
+        const countryNameEn = country.englishName.toLowerCase()
+
+        // Renvoie un booléen permettant de savoir si c'est la même région
+        const isTheSameRegion = regionSelected === notFiltersSelected || regionSelected === countryRegion
+
+        // Renvoie un booléen si la langue sélectionnée est comprise dans le pays
+        const isTheSameLanguage = languageSelected === notFiltersSelected || Object.values(countryLanguages).some(language => language.englishName.toLowerCase().replaceAll(' ','-') === languageSelected)
+
+        // Renvoie un booléen si une partie d'un pays écrit correspond au nom français ou anglais
+        const countainCountryName = countryNameFr.includes(countryNameTyped) || countryNameEn.includes(countryNameTyped)
+        
+        return isTheSameLanguage && isTheSameRegion && countainCountryName
+    })
+
+    // Nous renvoie sur la première page du tableau
+    pageNumber = 0
+    // Ré-affecte la variable pour quelle soit prise en compte dans la fonction d'affichage
+    filteredCountries = countriesFiltered
+    // Appel de la fonction d'affichage
+    printCountriesTable()
 }

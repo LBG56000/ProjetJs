@@ -27,7 +27,7 @@ const buttons = ['PRÉC', 'SUIV']
  * Définiion des classes utilisées
  */
 const classes = {
-    buttonContainer:'button_container'
+    buttonContainer:'button-container'
 }
 
 

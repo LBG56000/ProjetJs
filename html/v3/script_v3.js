@@ -27,7 +27,7 @@ const buttons = ['PRÉC', 'SUIV','Fermer']
  * Définiion des classes utilisées
  */
 const classes = {
-    buttonContainer:'button_container',
+    buttonContainer:'button-container',
     showDetails:'show-details',
     showPicture:'show-picture',
     popupContent:'popup-content',
@@ -126,9 +126,12 @@ function addPopupContent(country,contentType) {
     // Regard du type de contenu à ajouté
     switch (contentType) {
         case 'img':
+            // Récupération de la hauteur et largeur de l'image permettant ainsi de la grossir
+            let widthImage = $("table td img").attr("width")
+            let heightImage = $("table td img").attr("height")
 
             // Ajout de l'image dans la pop-up
-            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="260" height="150" title=Drapeau_${country.frenchName}></img></td>`)
+            $(`.${classes.popupContent}`).append(`<img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width=${widthImage * 7} height=${heightImage * 7} title=Drapeau_${country.frenchName}></img></td>`)
             break
         case 'table':
 
@@ -162,10 +165,10 @@ function closePopup() {
 $("table").on("click", `.show-picture`, function() {
     // Récupération de l'id du parent contenant le code du pays
     const parentId = $(this).parent().attr('id')
-    addPopupContent(all_countries[`${parentId}`],'img')
+    addPopupContent(all_countries[parentId],'img')
 })
 
 $("table").on("click", `.show-details`, function() {
     const parentId = $(this).parent().attr('id')
-    addPopupContent(all_countries[`${parentId}`],'table')
+    addPopupContent(all_countries[parentId],'table')
 })
