@@ -19,9 +19,14 @@ const elements_per_page = 25
 let pageNumber = 0
 
 /**
- * L'ensembles des colonnes à ce jour
+ * L'ensembles des colonnes à ce jour sous forme de tableau d'objet 
 */
-const colums = ['Nom Français', 'Population', 'Surface', 'Densité de population', 'Continent d\'appartenance', 'Drapeau']
+const colums = [{name:'Nom Français', id:'nomFrancais'},
+                {name:'Population', id:'population'},
+                {name:'Surface', id:"surface"}, 
+                {name:'Densité de population', id:"densitePop"},
+                {name: 'Continent d\'appartenance', id:"continentAppartenance"},
+                {name:'Drapeau', id:"drapeau"} ]
 
 /**
  * Définition des boutons à utiliser
@@ -44,7 +49,8 @@ const classes = {
     selectLanguage:'select-language',
     inputCountry:'input-country',
     optionRegion:'option-region',
-    optionLanguage:'option-language'
+    optionLanguage:'option-language',
+    bold:'bold'
 }
 
 /**
@@ -71,7 +77,7 @@ $("thead").append("<tr></tr>")
 
 // Ajout des noms de colonne
 $.map(colums, (colum) => {
-    $("thead > tr").append(`<th>${colum}</th>`)
+    $("thead > tr").append(`<th id=${colum.id}>${colum.name}</th>`)
 })
 
 /**
@@ -131,7 +137,6 @@ function determinePageNumber(actionButton) {
             }
             break
         default:
-            console.log('test')
             break
         }
     printCountriesTable()
@@ -213,6 +218,57 @@ $("table").on("click", `.show-details`, function () {
     addPopupContent(all_countries[parentId], 'table')
 })
 
+$("table").on("click", '#nomFrancais', function(){ // à changer
+
+    let countryclicked = true
+    filteredCountries = filteredCountries.sort((country1, country2) => country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
+    printCountriesTable()
+    if (countryclicked){
+        $("table").on("click", '#nomFrancais', function(){
+            filteredCountries = filteredCountries.sort((country1, country2) => country2.frenchName.localeCompare(country1.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
+        printCountriesTable()
+        })
+        countryclicked = false
+
+    }
+    
+})
+
+$("table").on("click", '#population', function(){ // à changer
+    let popclicked = true
+    filteredCountries = filteredCountries.sort((country1, country2)=>country1.getPopDensity()-country2.getPopDensity())
+    printCountriesTable()
+    if (popclicked){
+        $("table").on("click", '#population', function(){
+            filteredCountries = filteredCountries.sort((country1, country2)=>country2.getPopDensity()-country1.getPopDensity())
+            printCountriesTable()
+        })
+        popclicked = false
+    }
+})
+
+$("table").on("click", '#surface', function(){ // à changer
+    console.log("test")
+})
+$("table").on("click", '#densitePop', function(){ // à changer
+    console.log("test")
+})
+
+$("table").on("click", '#continentAppartenance', function(){ // à changer
+
+    let continentclicked = true
+    filteredCountries = filteredCountries.sort((continent1, continent2) => continent1.region.localeCompare(continent2.region, "fr", { ignorePunctuation: true, caseFirst: false }))
+    printCountriesTable()
+    if (continentclicked){
+        $("table").on("click", '#continentAppartenance', function(){
+            filteredCountries = filteredCountries.sort((continent1, continent2) => continent2.region.localeCompare(continent1.region, "fr", { ignorePunctuation: true, caseFirst: false }))
+        printCountriesTable()
+        })
+        continentclicked = false
+    }
+})
+
+
 function addDifferentSort() {
     // Ajout des continents
     const allRegions = addAllRegions()
@@ -260,6 +316,7 @@ function addDifferentSort() {
         countryNameTyped = $(this).val().trim().toLowerCase()
         sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
     })
+    
 }
 addDifferentSort()
 
