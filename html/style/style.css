@@ -28,10 +28,9 @@ tbody tr:nth-child(even){
     background-color: #f3f3f3;
 }
 
-table .show-details, table .show-picture{
+table .show-details, table .show-picture, #nomFrancais, #population,#surface,#densitePop,#continentAppartenance,#drapeau {
     cursor: pointer;   
 }
-
 thead > tr {
     position: sticky;
     top: 0;
@@ -98,4 +97,8 @@ button {
 /** Style relatif à un tableau vide données*/
 #emptyCountry{
     text-align: center;
+}
+
+.bold{
+    font-weight: bold;
 }
