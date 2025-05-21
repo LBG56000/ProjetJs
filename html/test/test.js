@@ -286,7 +286,7 @@ function sortingDecreasingDensity() {
     const all_countries_sorted = Object.values(all_countries)
     all_countries_sorted.sort((country1,country2) => {
         // Comparaison des densitée
-        return country1.getPopDensity() - country2.getPopDensity()
+        return country1.getPopDensity - country2.getPopDensity
     })
     return all_countries_sorted
 }

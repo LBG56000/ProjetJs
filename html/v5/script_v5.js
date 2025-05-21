@@ -107,7 +107,7 @@ function printCountriesTable() {
             <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
-            <td class="${classes.showDetails}">${country.getPopDensity() || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.getPopDensity || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
             <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
             </tr>`
@@ -192,7 +192,7 @@ function addPopupContent(country, contentType) {
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)
-            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity().toFixed(3) || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity.toFixed(3) || 'N/A'}</td></tr>`)
             break
         default:
             break
@@ -218,55 +218,6 @@ $("table").on("click", `.show-details`, function () {
     addPopupContent(all_countries[parentId], 'table')
 })
 
-$("table").on("click", '#nomFrancais', function(){ // à changer
-
-    let countryclicked = true
-    filteredCountries = filteredCountries.sort((country1, country2) => country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
-    printCountriesTable()
-    if (countryclicked){
-        $("table").on("click", '#nomFrancais', function(){
-            filteredCountries = filteredCountries.sort((country1, country2) => country2.frenchName.localeCompare(country1.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
-        printCountriesTable()
-        })
-        countryclicked = false
-
-    }
-    
-})
-
-$("table").on("click", '#population', function(){ // à changer
-    let popclicked = true
-    filteredCountries = filteredCountries.sort((country1, country2)=>country1.getPopDensity()-country2.getPopDensity())
-    printCountriesTable()
-    if (popclicked){
-        $("table").on("click", '#population', function(){
-            filteredCountries = filteredCountries.sort((country1, country2)=>country2.getPopDensity()-country1.getPopDensity())
-            printCountriesTable()
-        })
-        popclicked = false
-    }
-})
-
-$("table").on("click", '#surface', function(){ // à changer
-    console.log("test")
-})
-$("table").on("click", '#densitePop', function(){ // à changer
-    console.log("test")
-})
-
-$("table").on("click", '#continentAppartenance', function(){ // à changer
-
-    let continentclicked = true
-    filteredCountries = filteredCountries.sort((continent1, continent2) => continent1.region.localeCompare(continent2.region, "fr", { ignorePunctuation: true, caseFirst: false }))
-    printCountriesTable()
-    if (continentclicked){
-        $("table").on("click", '#continentAppartenance', function(){
-            filteredCountries = filteredCountries.sort((continent1, continent2) => continent2.region.localeCompare(continent1.region, "fr", { ignorePunctuation: true, caseFirst: false }))
-        printCountriesTable()
-        })
-        continentclicked = false
-    }
-})
 
 
 function addDifferentSort() {
@@ -401,4 +352,122 @@ function sortedByDifferentsFilters(regionSelected, languageSelected, countryName
     filteredCountries = countriesFiltered
     // Appel de la fonction d'affichage
     printCountriesTable()
+}
+
+/***** TRI *****/
+
+// Ajout d'un écouteur sur la colonne nomFrançais
+$("table").on("click", '#nomFrancais', function(){ 
+
+    // Ajout de style bold sur le header de la colonne
+    $("#nomFrancais").addClass("bold")
+    let countryclicked = true
+
+    // Tri alphabétique croissant des noms de pays
+    filteredCountries = filteredCountries.sort((country1, country2) => 
+        // Utilisation de localecompare pour trier des chaînes de caractère
+        country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
+    // Affichage de la table triée 
+    printCountriesTable()
+
+    // Tri alphabétique décroissant des noms de pays
+    if (countryclicked){
+        $("table").on("click", '#nomFrancais', function(){
+            filteredCountries = filteredCountries.sort((country1, country2) => 
+                country2.frenchName.localeCompare(country1.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
+        printCountriesTable()
+        })
+        countryclicked = false
+    }
+})
+
+// Ajout d'un écouteur sur la colonne population
+$("table").on("click", '#population', function(){
+    // Ajout de style bold sur le header de la colonne
+    $("#population").addClass("bold")
+    let popclicked = true
+    // Tri croissant de la colonne population
+    filteredCountries = filteredCountries.sort((country1, country2)=>
+        // Appel de la fonction skipUndefined
+        skipUndefined(country1,country2,"population"))
+    // Affichage du tableau trié
+    printCountriesTable()
+    // Ajout d'un second écouteur sur la colonne population
+    if (popclicked){
+        $("table").on("click", '#population', function(){
+            // Tri croissant de la colonne population
+            filteredCountries = filteredCountries.sort((country1, country2)=>
+                skipUndefined(country2,country1,"population"))
+            printCountriesTable()
+        })
+        popclicked = false
+    }
+})
+
+// Ajout d'un écouteur sur la colonne surface
+$("table").on("click", '#surface', function(){
+    $("#surface").addClass("bold")
+    let popclicked = true
+    filteredCountries = filteredCountries.sort((country1, country2)=>
+        skipUndefined(country1,country2,"area"))
+    
+    printCountriesTable()
+    if (popclicked){
+        $("table").on("click", '#surface', function(){
+            filteredCountries = filteredCountries.sort((country1, country2)=>
+                skipUndefined(country2,country1,"area"))
+            printCountriesTable()
+        })
+        popclicked = false
+    }
+})
+
+// Ajout d'un écouteur sur la colonne densitePop
+$("table").on("click", '#densitePop', function(){
+    $("#densitePop").addClass("bold")
+    let popclicked = true
+    filteredCountries = filteredCountries.sort((country1, country2)=>
+        skipUndefined(country1,country2,"getPopDensity"))
+    
+    printCountriesTable()
+    if (popclicked){
+        $("table").on("click", '#densitePop', function(){
+            filteredCountries = filteredCountries.sort((country1, country2)=>
+                skipUndefined(country2,country1,"getPopDensity"))
+            printCountriesTable()
+        })
+        popclicked = false
+    }
+})
+
+// Ajout d'un écouteur sur la colonne continentAppartenance
+$("table").on("click", '#continentAppartenance', function(){
+    $("#continentAppartenance").addClass("bold")
+    let continentclicked = true
+    filteredCountries = filteredCountries.sort((continent1, continent2) => 
+        continent1.region.localeCompare(continent2.region, "fr", { ignorePunctuation: true, caseFirst: false }))
+    printCountriesTable()
+    if (continentclicked){
+        $("table").on("click", '#continentAppartenance', function(){
+            filteredCountries = filteredCountries.sort((continent1, continent2) => 
+                continent2.region.localeCompare(continent1.region, "fr", { ignorePunctuation: true, caseFirst: false }))
+        printCountriesTable()
+        })
+        continentclicked = false
+    }
+})
+
+/**
+ * Fonction permettant d'ignorer les valeurs undefined
+ * @param {Premier pays} country1 
+ * @param {Second pays} country2 
+ * @param {La propriété qui est triée} typeSort 
+ * @returns un booléen
+ */
+function skipUndefined(country1, country2, typeSort){
+    // Ajout des undefined à la fin de la liste triée
+    if(country1[typeSort] === undefined || country2[typeSort] === undefined ){
+        return -1
+    }
+    return country1[typeSort] - country2[typeSort]
 }

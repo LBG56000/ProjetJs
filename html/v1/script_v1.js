@@ -38,7 +38,7 @@ function printCountriesTable() {
             <td>${country.frenchName || 'N/A'}</td>
             <td>${country.population || 'N/A'}</td>
             <td>${country.area || 'N/A'}</td>
-            <td>${country.getPopDensity() || 'N/A'}</td>
+            <td>${country.getPopDensity || 'N/A'}</td>
             <td>${country.region || 'N/A'}</td>
             <td><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
         </tr>`

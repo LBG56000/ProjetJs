@@ -133,7 +133,7 @@ class Country {
      * Permet de donner la population diviser par la superficie
      * @returns La densité de population
      */
-    getPopDensity() {
+    get getPopDensity() {
         if (this.population === undefined || this.area === undefined || this.area === 0){
             return 0
         }
