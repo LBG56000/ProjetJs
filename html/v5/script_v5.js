@@ -106,7 +106,7 @@ function printCountriesTable() {
             const countryLine = `<tr id="${country.codeAlpha3}">
             <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
-            <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
+            <td class="${classes.showDetails}">${country.area || 'N/A'} m²</td>
             <td class="${classes.showDetails}">${country.getPopDensity || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
             <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
@@ -188,7 +188,7 @@ function addPopupContent(country, contentType) {
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Continent</th><td>${country.region || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Population</th><td>${country.population || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Voisins</th><td>${country.traductionOfBorders || 'N/A'}</td></tr>`)
-            $(`.${classes.popupContent} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Surface</th><td>${country.area || 'N/A'} m²</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)

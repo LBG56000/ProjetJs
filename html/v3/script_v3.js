@@ -69,7 +69,7 @@ function printCountriesTable() {
         const countryLine = `<tr id="${country.codeAlpha3}">
         <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
         <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
-        <td class="${classes.showDetails}">${country.area || 'N/A'}</td>
+        <td class="${classes.showDetails}">${country.area || 'N/A'} m²</td>
         <td class="${classes.showDetails}">${country.getPopDensity || 'N/A'}</td>
         <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
         <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
