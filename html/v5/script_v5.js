@@ -264,7 +264,7 @@ function addDifferentSort() {
     
     $(".input-country").on("input", function () {
         // Normalisation de la saisie 
-        countryNameTyped = $(this).val().trim().toLowerCase()
+        countryNameTyped = $(this).val().trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
         sortedByDifferentsFilters(regionSelected,languageSelected,countryNameTyped)
     })
     
