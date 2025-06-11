@@ -362,7 +362,6 @@ $("table").on("click", '#nomFrancais', function(){
     // Ajout de style bold sur le header de la colonne
     $("#nomFrancais").addClass("bold")
     let countryclicked = true
-
     // Tri alphabétique croissant des noms de pays
     filteredCountries = filteredCountries.sort((country1, country2) => 
         // Utilisation de localecompare pour trier des chaînes de caractère
@@ -469,5 +468,20 @@ function skipUndefined(country1, country2, typeSort){
     if(country1[typeSort] === undefined || country2[typeSort] === undefined ){
         return -1
     }
-    return country1[typeSort] - country2[typeSort]
+    if (country1[typeSort] === country2[typeSort]) {
+        return country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false })
+    }
+    
+    return country1[typeSort] - country2[typeSort] > 0 ? 1 : -1
+}
+
+/**
+ * 
+ * @param {nom du premier pays} countryName1 
+ * @param {nom du second pays} countryName2 
+ * @returns un booléen 
+ */
+
+function sortByName(countryName1,countryName2){
+    return countryName1.localeCompare(countryName2, "fr", { ignorePunctuation: true, caseFirst: false })
 }
