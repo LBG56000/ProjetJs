@@ -380,64 +380,58 @@ $("table").on("click", '#nomFrancais', function(){
     }
 })
 
+// Variable permettant de savoir quel sens de tri voulons-nous sur la population
+let sortPopulationAscending = true
+
 // Ajout d'un écouteur sur la colonne population
 $("table").on("click", '#population', function(){
-    // Ajout de style bold sur le header de la colonne
     $("#population").addClass("bold")
-    let popclicked = true
-    // Tri croissant de la colonne population
-    filteredCountries = filteredCountries.sort((country1, country2)=>
-        // Appel de la fonction skipUndefined
-        skipUndefined(country1,country2,"population"))
-    // Affichage du tableau trié
-    printCountriesTable()
-    // Ajout d'un second écouteur sur la colonne population
-    if (popclicked){
-        $("table").on("click", '#population', function(){
-            // Tri croissant de la colonne population
-            filteredCountries = filteredCountries.sort((country1, country2)=>
-                skipUndefined(country2,country1,"population"))
-            printCountriesTable()
-        })
-        popclicked = false
+    if (sortPopDensityAscending === true) {
+        filteredCountries = filteredCountries.sort((country1,country2) => 
+            skipUndefined(country1,country2,'population')
+        )
+    } else { 
+        filteredCountries = filteredCountries.sort((country1,country2) => 
+            skipUndefined(country2,country1,'population')
+        )
     }
+    sortPopDensityAscending = !sortPopDensityAscending
+    printCountriesTable()
 })
 
-// Variable permettant de savoir quel type de tri voulons-nous sur la surface
+// Variable permettant de savoir quel sens de tri voulons-nous sur la surface
 let sortAreaAscending = true
 
 // Ajout d'un écouteur sur la colonne surface
 $("table").on("click", '#surface', function(){
     $("#surface").addClass("bold")
     if (sortAreaAscending === true) {
-        filteredCountries = filteredCountries.sort((country1,country2) => {
-            return skipUndefined(country1,country2,'area')
-        })
-        console.log('test')
+        filteredCountries = filteredCountries.sort((country1,country2) => 
+            skipUndefined(country1,country2,'area')
+        )
     } else { 
-        filteredCountries = filteredCountries.sort((country1,country2) => {
-            return skipUndefined(country2,country1,'area')
-        })
+        filteredCountries = filteredCountries.sort((country1,country2) => 
+            skipUndefined(country2,country1,'area')
+        )
     }
     sortAreaAscending = !sortAreaAscending
     printCountriesTable()
 })
 
-// Variable permettant de savoir quel type de tri voulons-nous sur la densité de population
+// Variable permettant de savoir quel sens de tri voulons-nous sur la densité de population
 let sortPopDensityAscending = true
 
 // Ajout d'un écouteur sur la colonne densité de population
 $("table").on("click", '#densitePop', function(){
     $("#densitePop").addClass("bold")
     if (sortPopDensityAscending === true) {
-        filteredCountries = filteredCountries.sort((country1,country2) => {
-            return skipUndefined(country1,country2,'getPopDensity')
-        })
-        console.log('test')
+        filteredCountries = filteredCountries.sort((country1,country2) =>
+            skipUndefined(country1,country2,'getPopDensity')
+        )
     } else { 
-        filteredCountries = filteredCountries.sort((country1,country2) => {
-            return skipUndefined(country2,country1,'getPopDensity')
-        })
+        filteredCountries = filteredCountries.sort((country1,country2) =>
+            skipUndefined(country2,country1,'getPopDensity')
+        )
     }
     sortPopDensityAscending = !sortPopDensityAscending
     printCountriesTable()
