@@ -107,7 +107,7 @@ function printCountriesTable() {
             <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.area || 'N/A'} m²</td>
-            <td class="${classes.showDetails}">${country.getPopDensity || 'N/A'}</td>
+            <td class="${classes.showDetails}">${(country.getPopDensity !== undefined && country.getPopDensity !== null) ? country.getPopDensity.toFixed(3) : 'N/A'}</td>
             <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
             <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
             </tr>`
@@ -192,7 +192,7 @@ function addPopupContent(country, contentType) {
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)
-            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity.toFixed(3) || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${(country.getPopDensity !== undefined && country.getPopDensity !== null) ? country.getPopDensity.toFixed(3) : 'N/A'}</td></tr>`)
             break
         default:
             break
@@ -403,7 +403,7 @@ $("table").on("click", '#population', function(){
     }
 })
 
-/** Variable permettant de savroi quel type de tri voulons-nous sur la surface */
+// Variable permettant de savoir quel type de tri voulons-nous sur la surface
 let sortAreaAscending = true
 
 // Ajout d'un écouteur sur la colonne surface
@@ -423,22 +423,24 @@ $("table").on("click", '#surface', function(){
     printCountriesTable()
 })
 
-// Ajout d'un écouteur sur la colonne densitePop
+// Variable permettant de savoir quel type de tri voulons-nous sur la densité de population
+let sortPopDensityAscending = true
+
+// Ajout d'un écouteur sur la colonne densité de population
 $("table").on("click", '#densitePop', function(){
     $("#densitePop").addClass("bold")
-    let popclicked = true
-    filteredCountries = filteredCountries.sort((country1, country2)=>
-        skipUndefined(country1,country2,"getPopDensity"))
-    
-    printCountriesTable()
-    if (popclicked){
-        $("table").on("click", '#densitePop', function(){
-            filteredCountries = filteredCountries.sort((country1, country2)=>
-                skipUndefined(country2,country1,"getPopDensity"))
-            printCountriesTable()
+    if (sortPopDensityAscending === true) {
+        filteredCountries = filteredCountries.sort((country1,country2) => {
+            return skipUndefined(country1,country2,'getPopDensity')
         })
-        popclicked = false
+        console.log('test')
+    } else { 
+        filteredCountries = filteredCountries.sort((country1,country2) => {
+            return skipUndefined(country2,country1,'getPopDensity')
+        })
     }
+    sortPopDensityAscending = !sortPopDensityAscending
+    printCountriesTable()
 })
 
 // Ajout d'un écouteur sur la colonne continentAppartenance

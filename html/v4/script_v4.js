@@ -101,7 +101,7 @@ function printCountriesTable() {
             <td class="${classes.showDetails}" >${country.frenchName || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.population || 'N/A'}</td>
             <td class="${classes.showDetails}">${country.area || 'N/A'} m²</td>
-            <td class="${classes.showDetails}">${country.getPopDensity || 'N/A'}</td>
+            <td class="${classes.showDetails}">${(country.getPopDensity !== undefined && country.getPopDensity !== null) ? country.getPopDensity.toFixed(3) : 'N/A'}</td>
             <td class="${classes.showDetails}">${country.region || 'N/A'}</td>
             <td class="${classes.showPicture}"><img src=${country.linkToImage} alt=Drapeau_${country.frenchName} width="130" height="75" title=Drapeau_${country.frenchName}></img></td>
             </tr>`
@@ -184,7 +184,7 @@ function addPopupContent(country, contentType) {
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Langues</th><td> ${country.getLanguages || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Monnaies</th><td>${country.getCurrencies || 'N/A'}</td></tr>`)
             $(`.${classes.popupContent} tbody`).append(`<tr><th>Nom(s) de domaine(s)</th><td>${country.domainExtension || 'N/A'}</td></tr>`)
-            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${country.getPopDensity.toFixed(3) || 'N/A'}</td></tr>`)
+            $(`.${classes.popupContent} tbody`).append(`<tr><th>Densité de population</th><td>${(country.getPopDensity !== undefined && country.getPopDensity !== null) ? country.getPopDensity.toFixed(3) : 'N/A'}</td></tr>`)
             break
         default:
             break
