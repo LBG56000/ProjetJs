@@ -403,22 +403,24 @@ $("table").on("click", '#population', function(){
     }
 })
 
+/** Variable permettant de savroi quel type de tri voulons-nous sur la surface */
+let sortAreaAscending = true
+
 // Ajout d'un écouteur sur la colonne surface
 $("table").on("click", '#surface', function(){
     $("#surface").addClass("bold")
-    let popclicked = true
-    filteredCountries = filteredCountries.sort((country1, country2)=>
-        skipUndefined(country1,country2,"area"))
-    
-    printCountriesTable()
-    if (popclicked){
-        $("table").on("click", '#surface', function(){
-            filteredCountries = filteredCountries.sort((country1, country2)=>
-                skipUndefined(country2,country1,"area"))
-            printCountriesTable()
+    if (sortAreaAscending === true) {
+        filteredCountries = filteredCountries.sort((country1,country2) => {
+            return skipUndefined(country1,country2,'area')
         })
-        popclicked = false
+        console.log('test')
+    } else { 
+        filteredCountries = filteredCountries.sort((country1,country2) => {
+            return skipUndefined(country2,country1,'area')
+        })
     }
+    sortAreaAscending = !sortAreaAscending
+    printCountriesTable()
 })
 
 // Ajout d'un écouteur sur la colonne densitePop
@@ -465,14 +467,31 @@ $("table").on("click", '#continentAppartenance', function(){
  */
 function skipUndefined(country1, country2, typeSort){
     // Ajout des undefined à la fin de la liste triée
-    if(country1[typeSort] === undefined || country2[typeSort] === undefined ){
+    const propertyCountry1 = country1[typeSort]
+    const propertyCountry2 = country2[typeSort]
+
+    // Test si les propriétés du country1 et country2 sont undefined retourne le fait qu'ils sont égaux
+    if (propertyCountry1 === undefined && propertyCountry2 === undefined) {
+        return 0
+    }
+
+    // Test si la propriété du country1 est défini retourne le fait qu'il est supérieur
+    if (propertyCountry1 === undefined) {
         return -1
     }
-    if (country1[typeSort] === country2[typeSort]) {
+
+    // Test si la propriété du country2 est défini retourne le fait qu'il est inférieur
+    if (propertyCountry2 === undefined) {
+        return -1
+    }
+
+    // Si les deux propriétés sont égales on trie sur le nom
+    if (propertyCountry1 === propertyCountry2) {
         return country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false })
     }
-    
-    return country1[typeSort] - country2[typeSort] > 0 ? 1 : -1
+
+    // Si les propriétés sont définies et différentes on trie de façon classique
+    return propertyCountry1 > propertyCountry2 ? 1 : -1
 }
 
 /**
