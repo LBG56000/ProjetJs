@@ -356,28 +356,24 @@ function sortedByDifferentsFilters(regionSelected, languageSelected, countryName
 
 /***** TRI *****/
 
-// Ajout d'un écouteur sur la colonne nomFrançais
-$("table").on("click", '#nomFrancais', function(){ 
+// Variable permettant de savoir quel sens de tri voulons-nous sur le nom français
+let sortNameAscending = true
 
-    // Ajout de style bold sur le header de la colonne
+// Ajout d'un écouteur sur la colonne population
+$("table").on("click", '#nomFrancais', function(){
     $("#nomFrancais").addClass("bold")
-    let countryclicked = true
-    // Tri alphabétique croissant des noms de pays
-    filteredCountries = filteredCountries.sort((country1, country2) => 
-        // Utilisation de localecompare pour trier des chaînes de caractère
-        country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
-    // Affichage de la table triée 
-    printCountriesTable()
-
-    // Tri alphabétique décroissant des noms de pays
-    if (countryclicked){
-        $("table").on("click", '#nomFrancais', function(){
-            filteredCountries = filteredCountries.sort((country1, country2) => 
-                country2.frenchName.localeCompare(country1.frenchName, "fr", { ignorePunctuation: true, caseFirst: false }))
-        printCountriesTable()
-        })
-        countryclicked = false
+    if (sortNameAscending === true) {
+        filteredCountries = filteredCountries.sort((country1,country2) => 
+            country1.frenchName.localeCompare(country2.frenchName, "fr", { ignorePunctuation: true, caseFirst: false })
+        )
+    } else { 
+        filteredCountries = filteredCountries.sort((country1,country2) => 
+            country2.frenchName.localeCompare(country1.frenchName, "fr", { ignorePunctuation: true, caseFirst: false })
+        )
     }
+    // Inversion de la valeur permettant de retrier par la suite dans le sens inverse
+    sortNameAscending = !sortNameAscending
+    printCountriesTable()
 })
 
 // Variable permettant de savoir quel sens de tri voulons-nous sur la population
@@ -395,6 +391,7 @@ $("table").on("click", '#population', function(){
             skipUndefined(country2,country1,'population')
         )
     }
+    // Inversion de la valeur permettant de retrier par la suite dans le sens inverse
     sortPopDensityAscending = !sortPopDensityAscending
     printCountriesTable()
 })
@@ -414,6 +411,7 @@ $("table").on("click", '#surface', function(){
             skipUndefined(country2,country1,'area')
         )
     }
+    // Inversion de la valeur permettant de retrier par la suite dans le sens inverse
     sortAreaAscending = !sortAreaAscending
     printCountriesTable()
 })
@@ -433,25 +431,29 @@ $("table").on("click", '#densitePop', function(){
             skipUndefined(country2,country1,'getPopDensity')
         )
     }
+    // Inversion de la valeur permettant de retrier par la suite dans le sens inverse
     sortPopDensityAscending = !sortPopDensityAscending
     printCountriesTable()
 })
 
-// Ajout d'un écouteur sur la colonne continentAppartenance
+// Variable permettant de savoir quel sens de tri voulons-nous sur le continent d'appartenance
+let sortRegionAscending = true
+
+// Ajout d'un écouteur sur la colonne population
 $("table").on("click", '#continentAppartenance', function(){
     $("#continentAppartenance").addClass("bold")
-    let continentclicked = true
-    filteredCountries = filteredCountries.sort((continent1, continent2) => 
-        continent1.region.localeCompare(continent2.region, "fr", { ignorePunctuation: true, caseFirst: false }))
-    printCountriesTable()
-    if (continentclicked){
-        $("table").on("click", '#continentAppartenance', function(){
-            filteredCountries = filteredCountries.sort((continent1, continent2) => 
-                continent2.region.localeCompare(continent1.region, "fr", { ignorePunctuation: true, caseFirst: false }))
-        printCountriesTable()
-        })
-        continentclicked = false
+    if (sortRegionAscending === true) {
+        filteredCountries = filteredCountries.sort((continent1, continent2) => 
+            continent1.region.localeCompare(continent2.region, "fr", { ignorePunctuation: true, caseFirst: false })
+        )
+    } else { 
+        filteredCountries = filteredCountries.sort((continent1, continent2) => 
+            continent2.region.localeCompare(continent1.region, "fr", { ignorePunctuation: true, caseFirst: false })
+        )
     }
+    // Inversion de la valeur permettant de retrier par la suite dans le sens inverse
+    sortRegionAscending = !sortRegionAscending
+    printCountriesTable()
 })
 
 /**
