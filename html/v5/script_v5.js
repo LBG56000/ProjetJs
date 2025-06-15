@@ -491,14 +491,3 @@ function skipUndefined(country1, country2, typeSort){
     // Si les propriétés sont définies et différentes on trie de façon classique
     return propertyCountry1 > propertyCountry2 ? 1 : -1
 }
-
-/**
- * 
- * @param {nom du premier pays} countryName1 
- * @param {nom du second pays} countryName2 
- * @returns un booléen 
- */
-
-function sortByName(countryName1,countryName2){
-    return countryName1.localeCompare(countryName2, "fr", { ignorePunctuation: true, caseFirst: false })
-}
