@@ -108,10 +108,10 @@ function neighborless() {
     // Tableau contenant les futurs pays avec le plus de voisins
     let neighborless = []
 
-    // Parcourts du tableau contenant les pays
+    // Parcourt du tableau contenant les pays
     Object.values(all_countries).forEach(country => {
 
-        // Initialisation des voisins de pays
+        // Initialisation des voisins du pays
         const borders = country.getBorders()
         if (borders.length === 0 && borders) {
             neighborless.push(country)
