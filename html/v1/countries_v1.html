@@ -25,6 +25,7 @@ table {
     width: auto;
     margin: 45px auto;
     border: 2px solid gray;
+    overflow-y: scroll;
 }
 
 thead tr {
@@ -66,6 +67,7 @@ button {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .hidden {
@@ -105,10 +107,15 @@ button {
     display: flex;
     justify-content: center;
     font-size: 1.4em;
+    flex-direction: column;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .input-container{
     margin: 0 1em;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 /** Style relatif à un tableau vide données*/
